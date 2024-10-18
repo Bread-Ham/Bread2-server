@@ -30,3 +30,5 @@ npm run start
 5. Une fois la PR approuvée, mergez `staging` dans `main`.
 
 Cela garantit que toutes les modifications sont d'abord testées sur `staging` avant d'être déployées sur `main`.
+
+test
