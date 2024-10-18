@@ -6,7 +6,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "db:migrate": "npx sequelize-cli db:migrate"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.7",
-    "prettierrc": "^0.0.0-5"
+    "prettierrc": "^0.0.0-5",
+    "sequelize-cli": "^6.6.2"
   },
   "dependencies": {
     "dotenv": "^16.4.5",

@@ -1,9 +1,10 @@
-import dotenv from 'dotenv';
 import express from 'express';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import session from 'express-session';
 import { Sequelize } from 'sequelize';
+
+import dotenv from 'dotenv';
 
 dotenv.config();
 
