@@ -31,4 +31,8 @@ npm run start
 
 Cela garantit que toutes les modifications sont d'abord testées sur `staging` avant d'être déployées sur `main`.
 
-test
+## Build les images docker
+
+1. À la racine du projet lancer les commandes suivante:
+   - `docker-compose build`
+   - `docker-compose up -d`
