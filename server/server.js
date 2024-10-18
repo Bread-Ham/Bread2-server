@@ -1,14 +1,30 @@
-// Charger les variables d'environnement
 import dotenv from 'dotenv';
-dotenv.config();
-
-// Importation des modules nécessaires
 import express from 'express';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import session from 'express-session';
+import { Sequelize } from 'sequelize';
 
-// Initialisation de l'application Express
+dotenv.config();
+
+const sequelize = new Sequelize(
+  process.env.DB_NAME || 'oauth_db',
+  process.env.DB_USER || 'oauth_user',
+  process.env.DB_PASSWORD || 'oauth_password',
+  {
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5432,
+    dialect: 'postgres',
+  }
+);
+
+sequelize
+  .authenticate()
+  .then(() => console.log('Connexion à la base de données réussie'))
+  .catch(err =>
+    console.error('Impossible de se connecter à la base de données:', err)
+  );
+
 const app = express();
 
 // Configuration de la session
@@ -88,7 +104,10 @@ app.get('/logout', (req, res) => {
   });
 });
 
-// Lancer le serveur
-app.listen(3000, () => {
-  console.log("Serveur en cours d'exécution sur http://localhost:3000");
+const port = process.env.PORT || 3000;
+
+sequelize.sync().then(() => {
+  app.listen(port, () => {
+    console.log(`Serveur démarré sur http://localhost:${port}`);
+  });
 });
