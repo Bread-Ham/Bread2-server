@@ -13,11 +13,15 @@ let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  );
 }
 
-fs
-  .readdirSync(__dirname)
+fs.readdirSync(__dirname)
   .filter(file => {
     return (
       file.indexOf('.') !== 0 &&
@@ -27,7 +31,10 @@ fs
     );
   })
   .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    const model = require(path.join(__dirname, file))(
+      sequelize,
+      Sequelize.DataTypes
+    );
     db[model.name] = model;
   });
 
@@ -36,6 +43,25 @@ Object.keys(db).forEach(modelName => {
     db[modelName].associate(db);
   }
 });
+
+const User = require('./User')(sequelize, Sequelize.DataTypes);
+const Client = require('./Client')(sequelize, Sequelize.DataTypes);
+const AuthorizationCode = require('./AuthorizationCode')(
+  sequelize,
+  Sequelize.DataTypes
+);
+const AccessToken = require('./AccessToken')(sequelize, Sequelize.DataTypes);
+const RefreshToken = require('./RefreshToken')(sequelize, Sequelize.DataTypes);
+
+Object.keys(db).forEach(modelName => {
+  db[modelName].associate(db);
+});
+
+db.User = User;
+db.Client = Client;
+db.AuthorizationCode = AuthorizationCode;
+db.AccessToken = AccessToken;
+db.RefreshToken = RefreshToken;
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
