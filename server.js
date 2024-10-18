@@ -1,76 +1,94 @@
+// Charger les variables d'environnement
+import dotenv from 'dotenv';
+dotenv.config();
+
+// Importation des modules nécessaires
 import express from 'express';
-import session from 'express-session';
 import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import session from 'express-session';
 
-const users = [{ id: 1, username: 'test', password: 'password' }];
-
+// Initialisation de l'application Express
 const app = express();
 
-app.use(express.urlencoded({ extended: false }));
+// Configuration de la session
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
-app.use(session({
-  secret: 'mon_secret',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 600000
-  }
-}));
-
+// Initialisation de Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new LocalStrategy((username, password, done) => {
-  const user = users.find(u => u.username === username);
-  if (!user) {
-    return done(null, false, { message: 'Utilisateur non trouvé' });
-  }
-  if (user.password !== password) {
-    return done(null, false, { message: 'Mot de passe incorrect' });
-  }
-  return done(null, user);
-}));
+// Configuration de Passport pour utiliser Google OAuth 2.0
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: 'http://localhost:3000/auth/google/callback',
+    },
+    function(accessToken, refreshToken, profile, done) {
+      return done(null, profile);
+    }
+  )
+);
 
+// Sérialisation et désérialisation de l'utilisateur dans la session
 passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-  const user = users.find(u => u.id === id);
   done(null, user);
 });
 
-app.use((req, res, next) => {
-  console.log('Session:', req.session);
-  next();
+passport.deserializeUser((user, done) => {
+  done(null, user);
 });
 
-app.post('/login', passport.authenticate('local', {
-  successRedirect: '/profile',
-  failureRedirect: '/login'
-}));
-
-app.get('/profile', (req, res) => {
-  if (!req.isAuthenticated()) {
-
-    return res.redirect('/login');
-  }
-  res.send(`Vous êtes connecté en tant que ${req.user.username}`);
-});
-
+// Route principale
 app.get('/', (req, res) => {
-  if (!req.session.views) {
-    req.session.views = 1;
-  } else {
-    req.session.views++;
-  }
-
-  res.send(`Hello World! Vous avez visité cette page ${req.session.views} fois.`);
+  res.send(
+    '<h1>Accueil</h1><a href="/auth/google">Se connecter avec Google</a>'
+  );
 });
 
-const port = process.env.PORT || 3000;
+// Route pour déclencher l'authentification avec Google
+app.get(
+  '/auth/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+  })
+);
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+// Route de callback après l'authentification réussie
+app.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    res.redirect('/profile');
+  }
+);
+
+// Route pour afficher le profil de l'utilisateur après connexion
+app.get('/profile', (req, res) => {
+  if (!req.user) {
+    return res.redirect('/');
+  }
+  res.send(
+    `<h1>Profil</h1><p>Nom : ${req.user.displayName}</p><a href="/logout">Se déconnecter</a>`
+  );
+});
+
+// Route pour gérer la déconnexion
+app.get('/logout', (req, res) => {
+  req.logout(() => {
+    res.redirect('/');
+  });
+});
+
+// Lancer le serveur
+app.listen(3000, () => {
+  console.log("Serveur en cours d'exécution sur http://localhost:3000");
 });
