@@ -1,3 +1,7 @@
+// Charger les variables d'environnement
+import dotenv from 'dotenv';
+dotenv.config();
+
 // Importation des modules nécessaires
 import express from 'express';
 import passport from 'passport';
@@ -10,7 +14,7 @@ const app = express();
 // Configuration de la session
 app.use(
   session({
-    secret: 'supersecretkey',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
   })
@@ -24,9 +28,8 @@ app.use(passport.session());
 passport.use(
   new GoogleStrategy(
     {
-      clientID:
-        '1086521265425-c3espqq0mlof5abucoe2sh6ubn504k8v.apps.googleusercontent.com',
-      clientSecret: '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',
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: 'http://localhost:3000/auth/google/callback',
     },
     function(accessToken, refreshToken, profile, done) {
