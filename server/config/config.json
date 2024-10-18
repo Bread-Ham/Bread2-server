@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "oauth_user",
+    "password": "oauth_password",
+    "database": "oauth_db",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "staging": {
+    "username": "oauth_user",
+    "password": "oauth_password",
+    "database": "oauth_db_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "oauth_user",
+    "password": "oauth_password",
+    "database": "oauth_db",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
