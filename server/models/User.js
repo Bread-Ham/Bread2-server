@@ -2,6 +2,11 @@ import { DataTypes } from 'sequelize';
 import { define } from '../config/database';
 
 const User = define('User', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   username: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -13,6 +18,7 @@ const User = define('User', {
   email: {
     type: DataTypes.STRING,
     allowNull: true,
+    unique: true,
   },
   created_at: {
     type: DataTypes.DATE,
