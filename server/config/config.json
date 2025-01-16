@@ -4,20 +4,26 @@
     "password": "oauth_password",
     "database": "oauth_db",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
+    "seederStorageTableName": "SequelizeDataSeeds"
   },
   "staging": {
     "username": "oauth_user",
     "password": "oauth_password",
     "database": "oauth_db_test",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
+    "seederStorageTableName": "SequelizeDataSeeds"
   },
   "production": {
     "username": "oauth_user",
     "password": "oauth_password",
     "database": "oauth_db",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
+    "seederStorageTableName": "SequelizeDataSeeds"
   }
 }

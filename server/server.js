@@ -3,6 +3,7 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import session from 'express-session';
 import { Sequelize } from 'sequelize';
+// import { bcrypt } from 'bcrypt';
 
 import dotenv from 'dotenv';
 
@@ -22,7 +23,7 @@ const sequelize = new Sequelize(
 sequelize
   .authenticate()
   .then(() => console.log('Connexion à la base de données réussie'))
-  .catch(err =>
+  .catch((err) =>
     console.error('Impossible de se connecter à la base de données:', err)
   );
 
@@ -49,7 +50,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: 'http://localhost:3000/auth/google/callback',
     },
-    function(accessToken, refreshToken, profile, done) {
+    function (accessToken, refreshToken, profile, done) {
       return done(null, profile);
     }
   )
