@@ -1,3 +1,9 @@
+# Membres de l'équipe
+- Anthony MINI
+- Alexandre BERNARDINI
+- Benjamin GLEITZ
+- Clément ROLLIN
+
 # OAuth Server
 
 Ce projet est un serveur OAuth simple utilisant Node.js et Express.
