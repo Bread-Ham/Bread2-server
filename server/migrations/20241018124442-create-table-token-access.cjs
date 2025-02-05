@@ -12,7 +12,7 @@ module.exports = {
           primaryKey: true,
         },
         token: {
-          type: Sequelize.STRING,
+          type: Sequelize.STRING(2048), // Plus long pour les JWT
           allowNull: false,
           unique: true,
         },
@@ -34,6 +34,8 @@ module.exports = {
             key: 'id',
           },
           allowNull: false,
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
         },
         user_id: {
           type: Sequelize.INTEGER,
@@ -44,12 +46,23 @@ module.exports = {
             },
             key: 'id',
           },
-          allowNull: false,
+          allowNull: true, // Important : permettre NULL pour les client credentials
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
         },
         created_at: {
           type: Sequelize.DATE,
-          defaultValue: Sequelize.NOW,
+          defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
+      }
+    );
+
+    // Index pour améliorer les performances
+    await queryInterface.addIndex(
+      { tableName: 'AccessTokens', schema: 'app' },
+      ['token'],
+      {
+        unique: true,
       }
     );
   },

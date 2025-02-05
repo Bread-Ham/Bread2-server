@@ -14,6 +14,7 @@ module.exports = {
         username: {
           type: Sequelize.STRING,
           allowNull: false,
+          unique: true,
         },
         password_hash: {
           type: Sequelize.STRING,
@@ -22,14 +23,15 @@ module.exports = {
         email: {
           type: Sequelize.STRING,
           allowNull: true,
+          unique: true,
         },
         created_at: {
           type: Sequelize.DATE,
-          defaultValue: Sequelize.NOW,
+          defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
         updated_at: {
           type: Sequelize.DATE,
-          defaultValue: Sequelize.NOW,
+          defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
       }
     );
