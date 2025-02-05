@@ -1,7 +1,7 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const User = require('./User');
-const Client = require('./Client');
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database.js';
+import User from './User.js';
+import Client from './Client.js';
 
 const RefreshToken = sequelize.define(
   'RefreshToken',
@@ -28,4 +28,4 @@ const RefreshToken = sequelize.define(
 RefreshToken.belongsTo(User, { foreignKey: 'user_id' });
 RefreshToken.belongsTo(Client, { foreignKey: 'client_id' });
 
-module.exports = RefreshToken;
+export default RefreshToken;

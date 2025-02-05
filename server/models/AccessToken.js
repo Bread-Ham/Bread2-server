@@ -1,7 +1,7 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const User = require('./User');
-const Client = require('./Client');
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database.js';
+import User from './User.js';
+import Client from './Client.js';
 
 const AccessToken = sequelize.define(
   'AccessToken',
@@ -9,14 +9,15 @@ const AccessToken = sequelize.define(
     token: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    expires_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
+      unique: true,
     },
     scope: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    expires_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
     },
     created_at: {
       type: DataTypes.DATE,
@@ -29,7 +30,13 @@ const AccessToken = sequelize.define(
   }
 );
 
-AccessToken.belongsTo(User, { foreignKey: 'user_id' });
-AccessToken.belongsTo(Client, { foreignKey: 'client_id' });
+AccessToken.belongsTo(User, { 
+  foreignKey: 'user_id',
+  as: 'user'
+});
+AccessToken.belongsTo(Client, { 
+  foreignKey: 'client_id',
+  as: 'client'
+});
 
-module.exports = AccessToken;
+export default AccessToken;
