@@ -2,27 +2,21 @@ import express from 'express';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import session from 'express-session';
-import { Sequelize } from 'sequelize';
 import cors from 'cors';
-// import { bcrypt } from 'bcrypt';
+import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+
+// Import des routes
+import oauthRoutes from './routes/oauth.js';
+
+// Import de la configuration de la base de données
+import sequelize from './config/database.js';
 
 dotenv.config();
 
 const app = express();
 
-// Connexion à la base de données PostgreSQL
-const sequelize = new Sequelize(
-  process.env.DB_NAME || 'oauth_db',
-  process.env.DB_USER || 'oauth_user',
-  process.env.DB_PASSWORD || 'oauth_password',
-  {
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 5432,
-    dialect: 'postgres',
-  }
-);
-
+// Test de la connexion à la base de données
 sequelize.authenticate()
   .then(() => console.log('Connexion à la base de données réussie'))
   .catch(err => console.error('Impossible de se connecter à la base de données:', err));
@@ -32,6 +26,10 @@ app.use(cors({
   origin: 'http://localhost:5173',  // Autorise uniquement le front-end
   credentials: true,                // Autorise les cookies/session
 }));
+
+// Parse les requêtes JSON
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configuration de la session
 app.use(session({
@@ -43,6 +41,9 @@ app.use(session({
 // Initialisation de Passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Configuration des routes OAuth
+app.use('/oauth', oauthRoutes);
 
 // Configuration de la stratégie Google OAuth 2.0
 passport.use(new GoogleStrategy({

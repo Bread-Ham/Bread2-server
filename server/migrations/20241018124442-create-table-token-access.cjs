@@ -14,20 +14,32 @@ module.exports = {
         token: {
           type: Sequelize.STRING,
           allowNull: false,
-        },
-        expires_at: {
-          type: Sequelize.DATE,
-          allowNull: false,
+          unique: true,
         },
         scope: {
           type: Sequelize.STRING,
           allowNull: true,
+        },
+        expires_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
         },
         client_id: {
           type: Sequelize.INTEGER,
           references: {
             model: {
               tableName: 'Clients',
+              schema: 'app',
+            },
+            key: 'id',
+          },
+          allowNull: false,
+        },
+        user_id: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: {
+              tableName: 'Users',
               schema: 'app',
             },
             key: 'id',
