@@ -45,7 +45,7 @@ class Auth {
     try {
       const accessToken = await AccessToken.findOne({
         where: { token },
-        include: ['client'],
+        include: ['client', 'user'],
       });
 
       if (!accessToken) {
@@ -74,7 +74,7 @@ class Auth {
   static async fetchUserInfo(userId) {
     try {
       return await User.findByPk(userId, {
-        attributes: ['id', 'email', 'name'], // Sélection des champs à retourner
+        attributes: ['id', 'email', 'username'], // Sélection des champs à retourner
       });
     } catch (error) {
       console.error('Erreur de récupération utilisateur:', error);

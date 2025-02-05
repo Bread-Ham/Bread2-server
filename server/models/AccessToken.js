@@ -30,7 +30,13 @@ const AccessToken = sequelize.define(
   }
 );
 
-AccessToken.belongsTo(User, { foreignKey: 'user_id' });
-AccessToken.belongsTo(Client, { foreignKey: 'client_id' });
+AccessToken.belongsTo(User, { 
+  foreignKey: 'user_id',
+  as: 'user'
+});
+AccessToken.belongsTo(Client, { 
+  foreignKey: 'client_id',
+  as: 'client'
+});
 
 export default AccessToken;
