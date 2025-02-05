@@ -20,6 +20,14 @@ const Client = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -34,5 +42,12 @@ const Client = sequelize.define(
     tableName: 'Clients',
   }
 );
+
+import User from './User.js';
+
+Client.belongsTo(User, {
+  foreignKey: 'user_id',
+  as: 'user'
+});
 
 export default Client;
