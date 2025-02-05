@@ -218,8 +218,7 @@ class OAuthController {
       res.json({
         sub: req.user.id,
         email: req.user.email,
-        name: req.user.name,
-        updated_at: req.user.updated_at,
+        username: req.user.username,
       });
     } catch (error) {
       console.error('Erreur userinfo:', error);
